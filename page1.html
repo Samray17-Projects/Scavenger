@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Classified Access</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        
+        <style>
+          .terminal-text {
+              font-family: 'Courier New', monospace;
+              color: #2dd4bf;
+              text-shadow: 0 0 5px rgba(45, 212, 191, 0.7);
+          }
+          .scanner {
+              position: absolute;
+              height: 2px;
+              width: 100%;
+              background: linear-gradient(to right, transparent, #2dd4bf, transparent);
+              animation: scan 2s ease-in-out infinite;
+              opacity: 0.7;
+              z-index: 10;
+          }
+          @keyframes scan {
+              0% { top: 0; }
+              50% { top: 100%; }
+              100% { top: 0; }
+          }
+          .pulse {
+              animation: pulse 1.5s infinite;
+          }
+          @keyframes pulse {
+              0% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.4); }
+              70% { box-shadow: 0 0 0 10px rgba(45, 212, 191, 0); }
+              100% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0); }
+          }
+          .terminal-flicker::before {
+              content: "█";
+              animation: blink 1s infinite;
+          }
+          @keyframes blink {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0; }
+          }
+          .grid-bg {
+              background-image: linear-gradient(rgba(45, 212, 191, 0.1) 1px, transparent 1px),
+                                linear-gradient(90deg, rgba(45, 212, 191, 0.1) 1px, transparent 1px);
+              background-size: 15px 15px;
+          }
+          .text-spy-purple {
+      color: #a855f7; /* Replace with your desired purple color */
+  }
+  .text-spy-teal {
+      color: #2dd4bf; /* Replace with your desired teal color */
+  }
+  .border-spy-teal {
+      border-color: #2dd4bf; /* Replace with your desired teal color */
+  }
+  .bg-spy-black {
+      background-color: #0a0a0a; /* Replace with your desired black color */
+  }
+  .hover\:bg-spy-black\/70:hover {
+      background-color: rgba(10, 10, 10, 0.7); /* Replace with your desired hover color */
+  }
+        </style>
+      </head>
+</div>   
+<body class="grid-bg min-h-screen flex items-center justify-center bg-black">
+    </style>
+    <div class="p-10">
+        <div class="text-center mb-8">
+            <div class="flex justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-spy-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold terminal-text mb-1">CLASSIFIED ACCESS</h1>
+            <div class="flex items-center justify-center space-x-1">
+                <span class="h-2 w-2 rounded-full bg-spy-purple animate-pulse"></span>
+                <p class="text-spy-purple text-xs">SECURITY LEVEL: ALPHA</p>
+                <span class="h-2 w-2 rounded-full bg-spy-purple animate-pulse"></span>
+            </div>
+        </div>
+        
+        <div class="mb-6 relative">
+            <label for="codeInput" class="block text-xs text-spy-teal mb-2">ENTER CLEARANCE CODE:</label>
+            <input type="password" id="codeInput" class="w-full px-4 py-3 bg-spy-black/80 border border-spy-teal/50 rounded text-spy-teal focus:outline-none focus:ring-1 focus:ring-spy-purple focus:border-spy-purple transition-all" placeholder="••••••••" autocomplete="off">
+            <div class="absolute right-3 top-9 terminal-flicker text-spy-teal"></div>
+        </div>
+        
+        <button id="submitBtn" class="w-full bg-spy-black hover:bg-spy-black/70 text-spy-teal border border-spy-teal py-3 px-4 rounded transition-all pulse flex items-center justify-center space-x-2">
+            <span>AUTHENTICATE</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+        
+        <div id="message" class="mt-4 text-center text-sm hidden"></div>
+        
+        <div class="mt-8 text-center opacity-60">
+            <p class="text-xs text-spy-purple">AUTHORIZED PERSONNEL ONLY</p>
+            <p class="text-[10px] text-spy-teal mt-1">CODE: "open123"</p>
+        </div>
+        
+        <div class="mt-6 flex justify-between text-[10px] text-spy-teal/50">
+            <span>SYS.45.12.A</span>
+            <span id="timestamp">--:--:--</span>
+        </div>
+    </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const correctCode = "Agent_Honeypot";
+        const codeInput = document.getElementById('codeInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const message = document.getElementById('message');
+        const timestamp = document.getElementById('timestamp');
+        
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            timestamp.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        setInterval(updateTimestamp, 1000);
+        updateTimestamp();
+        
+        // Function to check the code
+        function checkCode() {
+            const enteredCode = codeInput.value.trim();
+            
+            if (enteredCode === correctCode) {
+                message.textContent = "ACCESS GRANTED. INITIALIZING...";
+                message.classList.remove('text-red-500', 'hidden');
+                message.classList.add('terminal-text');
+                
+                // Add success effects
+                document.body.style.backgroundColor = "#0a0a0a";
+                const pulseEffect = document.createElement('div');
+                pulseEffect.className = 'fixed inset-0 bg-spy-teal/5 z-0';
+                document.body.appendChild(pulseEffect);
+                
+                // Simulate redirect after a short delay
+                setTimeout(() => {
+                    // In a real scenario, this would go to page_2.html
+                    alert("Access granted! Welcome Agent HONEYPOT.");
+                    window.location.href = "page2.html";
+                    document.body.removeChild(pulseEffect);
+                }, 2000);
+            } else {
+                message.textContent = "ACCESS DENIED. INVALID CODE.";
+                message.classList.remove('terminal-text', 'hidden');
+                message.classList.add('text-red-500');
+                
+                // Shake effect for wrong code
+                codeInput.classList.add('shake');
+                setTimeout(() => {
+                    codeInput.classList.remove('shake');
+                }, 500);
+            }
+        }
+        
+        // Event listeners
+        submitBtn.addEventListener('click', checkCode);
+        
+        codeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkCode();
+            }
+        });
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            .shake {
+                animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            }
+        `;
+        document.head.appendChild(style);
+    });
+    </script>
+</body>
+</html>
