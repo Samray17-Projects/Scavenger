@@ -177,14 +177,14 @@
     setTimeout(() => {
   document.getElementById('typed-message-container').classList.remove('hidden');
   typeWriter(
-    "The first is for Red, the color of fire,Then Jade, the gem that others admire.next is Ash, the ghost of the flame,finally the Storm, wild and untamed.",
+    "At raging waters, the brave all race, but your next code waits in a stiller place. not in the splash or the wildest slide, but at the gate, where grey and yellow awaits.",
     document.getElementById('typed-message')
   );
   document.getElementById('sub-message').textContent = "ENTER THE ANSWER BELOW";
-}, 5000);
+}, 1000);
     
     // // Typewriter effect
-    function typeWriter(text, element, i = 0, speed = 150) {
+    function typeWriter(text, element, i = 0, speed = 75) {
       if (i < text.length) {
         element.innerHTML += text.charAt(i);
         setTimeout(() => typeWriter(text, element, i + 1, speed), speed);
@@ -195,7 +195,7 @@
 
     document.getElementById('submitBtn').addEventListener('click', () => {
   const code = document.getElementById('codeInput').value.trim();
-  const passcode = "RJAS"; // Define the passcode here
+  const passcode = "4563"; // Define the passcode here
 
   if (code === passcode) {
     const flash = document.createElement('div');
@@ -212,7 +212,7 @@
     setTimeout(() => {
       document.body.removeChild(flash);
       alert('WELL WELL WELL. YOU GOT IT. I GUESS YOU ARE SMARTER THAN YOU LOOK.');
-      window.location.href = "page5.html"; // Redirect to the next page
+      window.location.href = "page4.html"; // Redirect to the next page
     }, 300);
   } else {
     alert('IT SEEMS I WAS MISTAKEN BY YOU. TRY AGAIN.');
