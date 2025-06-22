@@ -177,14 +177,13 @@
     setTimeout(() => {
   document.getElementById('typed-message-container').classList.remove('hidden');
   typeWriter(
-    "I'm sure you know where your old schools front gate is. go on, find the 5 digit code that resides close to the vicinity",
-    document.getElementById('typed-message')
+    "Nj … rcdgno kmjwdib d ajpiy v gjxvodji xvggzy Pimzvg Hdid Bjga nzzhn tjp rjpg y bj vgjo… Better play one! ( 5 → )",    document.getElementById('typed-message')
   );
   document.getElementById('sub-message').textContent = "ENTER THE ANSWER BELOW";
-}, 5000);
+}, 1000);
     
     // // Typewriter effect
-    function typeWriter(text, element, i = 0, speed = 150) {
+    function typeWriter(text, element, i = 0, speed = 75) {
       if (i < text.length) {
         element.innerHTML += text.charAt(i);
         setTimeout(() => typeWriter(text, element, i + 1, speed), speed);
@@ -195,7 +194,7 @@
 
     document.getElementById('submitBtn').addEventListener('click', () => {
   const code = document.getElementById('codeInput').value.trim();
-  const passcode = "11111"; // Define the passcode here
+  const passcode = "Unreal Mini Golf"; // Define the passcode here
 
   if (code === passcode) {
     const flash = document.createElement('div');
@@ -212,7 +211,7 @@
     setTimeout(() => {
       document.body.removeChild(flash);
       alert('SEEMS YOU KNOW HOW TO USE YOUR EYES. WELL DONE I SUPPOSE.');
-      window.location.href = "page4.html"; // Redirect to the next page
+      window.location.href = "page5.html"; // Redirect to the next page
     }, 300);
   } else {
     alert('IT SEEMS I WAS MISTAKEN BY YOU. TRY AGAIN.');

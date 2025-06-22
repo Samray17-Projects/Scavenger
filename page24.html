@@ -77,15 +77,6 @@
       50% { opacity: 0; }
     }
 
-    .glow-input {
-      box-shadow: 0 0 10px rgba(45, 212, 191, 0.2);
-      transition: box-shadow 0.3s ease;
-    }
-
-    .glow-input:focus {
-      box-shadow: 0 0 15px rgba(45, 212, 191, 0.5);
-    }
-
     .typewriter {
       overflow: hidden;
       border-right: 0.15em solid #2dd4bf;
@@ -104,20 +95,32 @@
       from, to { border-color: transparent }
       50% { border-color: #2dd4bf }
     }
+
+    /* Countdown style */
+    #countdown {
+      font-family: monospace;
+      color: #a855f7; /* spy-purple */
+      font-size: 0.75rem;
+      margin-top: 0.2rem;
+      user-select: none;
+    }
   </style>
 </head>
 
 <body class="bg-black min-h-screen flex items-center justify-center">
 
-  <!-- ✅ Grid only wraps content box -->
   <div class="grid-bg bg-black p-10 rounded-lg max-w-xl w-full shadow-lg">
 
     <!-- Header -->
     <header class="mb-6">
       <div class="flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-          <span class="h-2 w-2 rounded-full bg-spy-teal blink"></span>
-          <span class="text-xs text-spy-teal/70">SECURE CONNECTION</span>
+        <div class="flex flex-col">
+          <div class="flex items-center space-x-2">
+            <span class="h-2 w-2 rounded-full bg-spy-teal blink"></span>
+            <span class="text-xs text-spy-teal/70">SECURE CONNECTION</span>
+          </div>
+          <!-- Countdown placed here -->
+          <p id="countdown">Loading countdown...</p>
         </div>
         <div class="text-right">
           <p class="terminal-text text-sm">AGENT ID: <span class="text-spy-purple font-bold">HONEYPOT</span></p>
@@ -128,32 +131,31 @@
 
     <!-- Main -->
     <main class="text-center">
- 
+      <div id="initial-messages">      </div>
+
       <div id="typed-message-container" class="hidden mt-4">
         <h1 id="typed-message" class="text-2xl md:text-3xl font-bold terminal-text"></h1>
       </div>
 
       <div class="mt-6 text-spy-teal/60 text-sm">
-        <p id="sub-message" class="cursor">STANDBY FOR INSTRUCTIONS</p>
+        
       </div>
     </main>
 
     <!-- Footer -->
-    <footer class="mt-10">
-      <div class="mb-2 flex justify-between items-center">
-        <label for="codeInput" class="text-xs text-spy-teal">AUTHORIZATION CODE:</label>
-        <div class="flex items-center space-x-2">
-          <span class="h-2 w-2 rounded-full bg-spy-purple"></span>
-          <span class="text-xs text-spy-purple">ENCRYPTED</span>
-        </div>
+    <footer class="mt-10 text-center">
+      <p class="text-sm text-spy-teal mb-4"></p>
+
+      <div class="flex justify-center space-x-6">
+        <button id="yesBtn" class="bg-spy-black hover:bg-spy-black/70 text-spy-teal border border-spy-teal/50 py-2 px-6 rounded transition-all pulse">
+          YES
+        </button>
+        <button id="noBtn" class="bg-spy-black hover:bg-spy-black/70 text-spy-purple border border-spy-purple/50 py-2 px-6 rounded transition-all">
+          NO
+        </button>
       </div>
 
-      <div class="relative">
-        <input type="text" id="codeInput" class="w-full bg-spy-black/80 border border-spy-teal/50 rounded px-4 py-3 text-spy-teal focus:outline-none focus:border-spy-teal glow-input" placeholder="ENTER CODE" autocomplete="off">
-        <button id="submitBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-spy-black hover:bg-spy-black/70 text-spy-teal border border-spy-teal/50 py-1 px-3 rounded text-sm transition-all">VERIFY</button>
-      </div>
-
-      <div class="mt-4 flex justify-between text-xs text-spy-teal/50">
+      <div class="mt-6 flex justify-between text-xs text-spy-teal/50">
         <span>TERMINAL ID: TS-117</span>
         <span>SECURITY PROTOCOL: ALPHA-9</span>
       </div>
@@ -162,7 +164,7 @@
   </div>
 
   <script>
-    // Update live timestamp
+    // Live timestamp update
     function updateTimestamp() {
       const now = new Date();
       const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
@@ -172,18 +174,29 @@
     setInterval(updateTimestamp, 1000);
     updateTimestamp();
 
+    // Cycle messages
 
+    let currentIndex = 0;
+    let cycleInterval = setInterval(() => {
+      for (let i = 1; i <= messages.length; i++) {
+        document.getElementById(`message-${i}`).classList.add('hidden');
+      }
+      currentIndex = (currentIndex + 1) % messages.length;
+      document.getElementById(`message-${currentIndex + 1}`).classList.remove('hidden');
+    }, 1500);
 
     setTimeout(() => {
-  document.getElementById('typed-message-container').classList.remove('hidden');
-  typeWriter(
-    "QAUA FGLO ~ get a bucket and take a swing ~",
-    document.getElementById('typed-message')
-  );
-  document.getElementById('sub-message').textContent = "ENTER THE LOCATION BELOW";
-}, 1000);
-    
-    // // Typewriter effect
+      clearInterval(cycleInterval);
+      document.getElementById('initial-messages').classList.add('hidden');
+      document.getElementById('typed-message-container').classList.remove('hidden');
+      typeWriter(
+        "Before i accept defeat. There remains one final test. There is two time trials on mario kart. Beat them and ill declare my loss (Mushroom Gorge and Coconut Mall)",
+        document.getElementById('typed-message')
+      );
+      document.getElementById('sub-message').textContent = "STANDBY FOR INSTRUCTIONS";
+    }, 1000);
+
+    // Typewriter effect
     function typeWriter(text, element, i = 0, speed = 75) {
       if (i < text.length) {
         element.innerHTML += text.charAt(i);
@@ -193,38 +206,53 @@
       }
     }
 
-    document.getElementById('submitBtn').addEventListener('click', () => {
-  const code = document.getElementById('codeInput').value.trim();
-  const passcode = "AQUA GOLF"; // Define the passcode here
+    // YES / NO button logic
+    document.getElementById('yesBtn').addEventListener('click', () => {
+      const flash = document.createElement('div');
+      flash.style.position = 'fixed';
+      flash.style.top = '0';
+      flash.style.left = '0';
+      flash.style.width = '100%';
+      flash.style.height = '100%';
+      flash.style.backgroundColor = 'rgba(45, 212, 191, 0.2)';
+      flash.style.zIndex = '9999';
+      flash.style.pointerEvents = 'none';
+      document.body.appendChild(flash);
 
-  if (code === passcode) {
-    const flash = document.createElement('div');
-    flash.style.position = 'fixed';
-    flash.style.top = '0';
-    flash.style.left = '0';
-    flash.style.width = '100%';
-    flash.style.height = '100%';
-    flash.style.backgroundColor = 'rgba(45, 212, 191, 0.2)';
-    flash.style.zIndex = '9999';
-    flash.style.pointerEvents = 'none';
-    document.body.appendChild(flash);
-
-    setTimeout(() => {
-      document.body.removeChild(flash);
-      alert('SEEMS YOU KNOW HOW TO USE YOUR EYES. WELL DONE I SUPPOSE.');
-      window.location.href = "page5.5.html"; // Redirect to the next page
-    }, 300);
-  } else {
-    alert('IT SEEMS I WAS MISTAKEN BY YOU. TRY AGAIN.');
-    document.getElementById('codeInput').value = '';
-  }
-});
-
-    document.getElementById('codeInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        document.getElementById('submitBtn').click();
-      }
+      setTimeout(() => {
+        document.body.removeChild(flash);
+        window.location.href = "page16.html"; // Redirect to next page
+      }, 500);
     });
+
+    document.getElementById('noBtn').addEventListener('click', () => {
+      alert("I expected more from you, Agent...");
+    });
+
+    // Countdown timer script
+    function updateCountdown() {
+      const countdownEl = document.getElementById('countdown');
+      // June 26, 2025 23:00 UTC (months are zero-indexed: 5=June)
+      const targetDate = new Date(Date.UTC(2025, 5, 26, 23, 0, 0));
+      const now = new Date();
+
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        countdownEl.textContent = "THE TIME HAS ARRIVED — MISSION START";
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      countdownEl.textContent = `TIME TILL FAIL: ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
   </script>
 </body>
 </html>
