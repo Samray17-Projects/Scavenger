@@ -30,34 +30,6 @@
       background-size: 15px 15px;
     }
 
-    .flicker {
-      animation: textFlicker 4s linear infinite;
-    }
-
-    @keyframes textFlicker {
-      0%, 100% { opacity: 1; text-shadow: 0 0 5px rgba(45, 212, 191, 0.7); }
-      8% { opacity: 0.8; }
-      10% { opacity: 1; }
-      20% { opacity: 0.9; }
-      40% { opacity: 1; }
-      42% { opacity: 0.8; }
-      44% { opacity: 1; }
-      60% { opacity: 0.9; }
-      62% { opacity: 1; }
-      70% { opacity: 0.7; }
-      72% { opacity: 1; }
-    }
-
-    .pulse {
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(45, 212, 191, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0); }
-    }
-
     .blink {
       animation: blink 1.5s infinite;
     }
@@ -77,29 +49,19 @@
       50% { opacity: 0; }
     }
 
-    .typewriter {
-      overflow: hidden;
-      border-right: 0.15em solid #2dd4bf;
-      white-space: nowrap;
-      margin: 0 auto;
-      letter-spacing: 0.15em;
-      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    .pulse {
+      animation: pulse 2s infinite;
     }
 
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(45, 212, 191, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0); }
     }
 
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: #2dd4bf }
-    }
-
-    /* Countdown style */
     #countdown {
       font-family: monospace;
-      color: #a855f7; /* spy-purple */
+      color: #a855f7;
       font-size: 0.75rem;
       margin-top: 0.2rem;
       user-select: none;
@@ -119,7 +81,6 @@
             <span class="h-2 w-2 rounded-full bg-spy-teal blink"></span>
             <span class="text-xs text-spy-teal/70">SECURE CONNECTION</span>
           </div>
-          <!-- Countdown placed here -->
           <p id="countdown">Loading countdown...</p>
         </div>
         <div class="text-right">
@@ -129,20 +90,20 @@
       </div>
     </header>
 
-    <!-- Main -->
-    <main class="text-center">
-      <div id="initial-messages">
-        <p id="message-1" class="text-2xl md:text-3xl font-bold terminal-text flicker">AWAITING MISSION PARAMETERS</p>
-        <p id="message-2" class="text-2xl md:text-3xl font-bold terminal-text flicker hidden">SYSTEM BREACH DETECTED</p>
-        <p id="message-3" class="text-2xl md:text-3xl font-bold terminal-text flicker hidden">ENTER OVERRIDE SEQUENCE</p>
-      </div>
+    <!-- Main with Video -->
+    <main class="text-center relative">
+      <video id="mission-video" class="w-full rounded-lg shadow-lg" loop playsinline>
+        <source src="mystery_guy.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-      <div id="typed-message-container" class="hidden mt-4">
-        <h1 id="typed-message" class="text-2xl md:text-3xl font-bold terminal-text"></h1>
-      </div>
+      <!-- Tap to Play Overlay -->
+      <button id="playWithSound" class="absolute inset-0 bg-black bg-opacity-80 text-spy-teal text-lg font-bold flex items-center justify-center w-full h-full z-10">
+        TAP TO ENABLE AUDIO
+      </button>
 
       <div class="mt-6 text-spy-teal/60 text-sm">
-        <p id="sub-message" class="cursor">STANDBY FOR INSTRUCTIONS</p>
+        <p class="cursor">STANDBY FOR INSTRUCTIONS</p>
       </div>
     </main>
 
@@ -168,7 +129,7 @@
   </div>
 
   <script>
-    // Live timestamp update
+    // Live timestamp
     function updateTimestamp() {
       const now = new Date();
       const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
@@ -178,68 +139,11 @@
     setInterval(updateTimestamp, 1000);
     updateTimestamp();
 
-    // Cycle messages
-    const messages = ["AWAITING PARAMETERS", "SYSTEM BREACH DETECTED", "ENTER OVERRIDE SEQUENCE"];
-    let currentIndex = 0;
-    let cycleInterval = setInterval(() => {
-      for (let i = 1; i <= messages.length; i++) {
-        document.getElementById(`message-${i}`).classList.add('hidden');
-      }
-      currentIndex = (currentIndex + 1) % messages.length;
-      document.getElementById(`message-${currentIndex + 1}`).classList.remove('hidden');
-    }, 1500);
-
-    setTimeout(() => {
-      clearInterval(cycleInterval);
-      document.getElementById('initial-messages').classList.add('hidden');
-      document.getElementById('typed-message-container').classList.remove('hidden');
-      typeWriter(
-        "So, you think you can handle this? Ive taken sam because honestly ive been wanting to chanllenge you for a while. Ill give him back... provided you win. oh and ive already sent for a helper she will be delivered to you momentarily.",
-        document.getElementById('typed-message')
-      );
-      document.getElementById('sub-message').textContent = "STANDBY FOR INSTRUCTIONS";
-    }, 5000);
-
-    // Typewriter effect
-    function typeWriter(text, element, i = 0, speed = 100) {
-      if (i < text.length) {
-        element.innerHTML += text.charAt(i);
-        setTimeout(() => typeWriter(text, element, i + 1, speed), speed);
-      } else {
-        element.classList.add('cursor');
-      }
-    }
-
-    // YES / NO button logic
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      const flash = document.createElement('div');
-      flash.style.position = 'fixed';
-      flash.style.top = '0';
-      flash.style.left = '0';
-      flash.style.width = '100%';
-      flash.style.height = '100%';
-      flash.style.backgroundColor = 'rgba(45, 212, 191, 0.2)';
-      flash.style.zIndex = '9999';
-      flash.style.pointerEvents = 'none';
-      document.body.appendChild(flash);
-
-      setTimeout(() => {
-        document.body.removeChild(flash);
-        window.location.href = "page3.html"; // Redirect to next page
-      }, 500);
-    });
-
-    document.getElementById('noBtn').addEventListener('click', () => {
-      alert("I expected more from you, Agent...");
-    });
-
-    // Countdown timer script
+    // Countdown
     function updateCountdown() {
       const countdownEl = document.getElementById('countdown');
-      // June 26, 2025 23:00 UTC (months are zero-indexed: 5=June)
-      const targetDate = new Date(Date.UTC(2025, 5, 26, 23, 0, 0));
+      const targetDate = new Date(Date.UTC(2025, 5, 26, 23, 0, 0)); // June 26, 2025 23:00 UTC
       const now = new Date();
-
       const diff = targetDate - now;
 
       if (diff <= 0) {
@@ -257,6 +161,43 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
+    // Tap to play sound (Safari/iOS workaround)
+    const video = document.getElementById('mission-video');
+    const playBtn = document.getElementById('playWithSound');
+
+    playBtn.addEventListener('click', () => {
+      video.muted = false;
+      video.volume = 1;
+      video.play().then(() => {
+        playBtn.style.display = 'none';
+      }).catch(err => {
+        alert("Could not play video. Try again.");
+        console.error(err);
+      });
+    });
+
+    // YES / NO buttons
+    document.getElementById('yesBtn').addEventListener('click', () => {
+      const flash = document.createElement('div');
+      flash.style.position = 'fixed';
+      flash.style.top = '0';
+      flash.style.left = '0';
+      flash.style.width = '100%';
+      flash.style.height = '100%';
+      flash.style.backgroundColor = 'rgba(45, 212, 191, 0.2)';
+      flash.style.zIndex = '9999';
+      flash.style.pointerEvents = 'none';
+      document.body.appendChild(flash);
+
+      setTimeout(() => {
+        document.body.removeChild(flash);
+        window.location.href = "page3.html";
+      }, 500);
+    });
+
+    document.getElementById('noBtn').addEventListener('click', () => {
+      alert("I expected more from you, Agent...");
+    });
   </script>
 </body>
 </html>
